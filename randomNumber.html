@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Random number check</title>
+    <link rel="stylesheet" href="randomNumber.css">
+</head>
+
+<body>
+    <script src="jquery-3.6.4.min.js"></script>
+    <div class="mainDiv">
+        <p class="text1">Guess the random number</p>
+        <p class="text2">From 0 to 9</p>
+        <div class="numSec">
+            <div class="Box" id="box"></div>
+            <div class="hiddenValue hide"></div>
+        </div>
+        <div class="inputSec"><input type="text" id="input" maxlength="1" placeholder="?">
+            <button class="checkBtn" id="checBtn" onclick="check()">check</button></div>
+        <p id="resultcheck" class="numCheck hide"></p>
+        <div class="ResultPopup hide" id="resPopup" placeholder="enter here">
+            <div class="formPopup" id="popupForm">
+                <p id="result">
+                </p>
+
+            </div>
+        </div>
+        <div class="reBtns">
+            <button class="resetBtn" onclick="window.location.reload()">reset</button>
+            <button class="retryBtn" onclick="retry()">retry</button>
+        </div>
+    </div>
+
+    <script>
+        //setting variables for sections to show result
+        var result = document.getElementById("result");
+        var resultcheck = document.getElementById("resultcheck");
+        var inp = document.getElementById("input");
+
+        //key press for input button using jquery which linked above
+        $("#input").keypress(function(event) {
+            if (event.keyCode === 13) {
+                $(".checkBtn").click();
+            }
+        });
+
+        //Main function checking number and showing result
+        function check() {
+            var num = inp.value;
+            if (isNaN(num) || num == " ") {
+                $(".numCheck").removeClass("hide");
+                resultcheck.innerHTML = "please enter valid whole number <br/>";
+            } else {
+                if (num == Math.floor(num)) {
+                    //opening popup
+                    document.getElementById("resPopup").style.display = "block";
+                    $(".ResultPopup").removeClass("hide");
+                    var random = Math.floor(Math.random() * 10);
+                    if (num == random) {
+                        result.innerHTML = "congrats";
+                    } else {
+                        result.innerHTML = "better luck next time";
+                    }
+                    //section showing hiiden number
+                    $("#box").removeClass("Box").addClass("vapor");
+                    $(".hiddenValue").removeClass("hide");
+                    $(".numCheck").addClass("hide");
+                    setTimeout(function() {
+                        document.querySelector(".hiddenValue").innerHTML = random;
+                    }, 1000)
+                    setTimeout(function() {
+                        $("#box").removeClass("vapor").addClass("BoxWhite");
+                    }, 4000)
+                    document.getElementById("input").disabled = true;
+                    document.getElementById("checBtn").disabled = true;
+                }
+            }
+        }
+
+        //retry function which removes input value
+        function retry() {
+            document.getElementById('input').value = '';
+            $("#box").removeClass("BoxWhite").addClass("Box");
+            $(".numCheck").addClass("hide");
+            $(".hiddenValue").addClass("hide");
+            document.getElementById("resPopup").style.display = "none";
+            document.getElementById("input").disabled = false;
+            document.getElementById("checBtn").disabled = false;
+        }
+    </script>
+</body>
+
+</html>
