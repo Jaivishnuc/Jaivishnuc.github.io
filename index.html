@@ -3,6 +3,7 @@
 
 <head>
     <title>Random number check</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="randomNumber.css">
 </head>
 
@@ -15,18 +16,23 @@
             <div class="Box" id="box"></div>
             <div class="hiddenValue hide"></div>
         </div>
-        <div class="inputSec"><input type="text" id="input" maxlength="1" placeholder="?">
+        <div class="inputSec"><input type="text" autocomplete="off" id="input" maxlength="1" placeholder="?">
             <button class="checkBtn" id="checBtn" onclick="check()">check</button></div>
         <p id="resultcheck" class="numCheck hide"></p>
-        <div class="ResultPopup hide" id="resPopup" placeholder="enter here">
+        <div class="ResultPopup hide" id="resPopup">
             <div class="formPopup" id="popupForm">
                 <p id="result">
                 </p>
+
             </div>
         </div>
         <div class="reBtns">
             <button class="resetBtn" onclick="window.location.reload()">reset</button>
             <button class="retryBtn" onclick="retry()">retry</button>
+        </div>
+        <div class="attempt">
+            <div class="attempts">Attempt:</div>
+            <div class="attemptCount">0</div>
         </div>
     </div>
 
@@ -35,7 +41,7 @@
         var result = document.getElementById("result");
         var resultcheck = document.getElementById("resultcheck");
         var inp = document.getElementById("input");
-
+        var attCount = 0;
         //key press for input button using jquery which linked above
         $("#input").keypress(function(event) {
             if (event.keyCode === 13) {
@@ -46,10 +52,12 @@
         //Main function checking number and showing result
         function check() {
             var num = inp.value;
-            if (isNaN(num) || num == " ") {
+
+            if (isNaN(num) || num == " " || num == "") {
                 $(".numCheck").removeClass("hide");
                 resultcheck.innerHTML = "please enter valid whole number <br/>";
             } else {
+                attCount++;
                 if (num == Math.floor(num)) {
                     //opening popup
                     document.getElementById("resPopup").style.display = "block";
@@ -68,10 +76,13 @@
                         document.querySelector(".hiddenValue").innerHTML = random;
                     }, 1000)
                     setTimeout(function() {
-                        $("#box").removeClass("vapor").addClass("BoxWhite");
+                        if ($("#box").hasClass('vapor')) {
+                            $("#box").removeClass("vapor").addClass("BoxWhite");
+                        }
                     }, 4000)
                     document.getElementById("input").disabled = true;
                     document.getElementById("checBtn").disabled = true;
+                    document.querySelector(".attemptCount").innerHTML = attCount;
                 }
             }
         }
@@ -79,7 +90,8 @@
         //retry function which removes input value
         function retry() {
             document.getElementById('input').value = '';
-            $("#box").removeClass("BoxWhite").addClass("Box");
+            $("#box").removeClass("vapor").removeClass("BoxWhite");
+            $("#box").addClass("Box");
             $(".numCheck").addClass("hide");
             $(".hiddenValue").addClass("hide");
             document.getElementById("resPopup").style.display = "none";
